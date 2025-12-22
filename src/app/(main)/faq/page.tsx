@@ -4,95 +4,86 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { PageHeader } from "@/components/ui/page-header";
 
 const faqCategories = [
   {
-    title: "Orders & Shipping",
+    title: "سفارشات و ارسال",
     faqs: [
       {
-        question: "How long does shipping take?",
+        question: "ارسال چقدر طول می‌کشد؟",
         answer:
-          "Standard shipping typically takes 3-5 business days within the US. Express shipping is available for 1-2 business day delivery. International shipping times vary by destination.",
+          "ارسال استاندارد معمولاً ۳ تا ۵ روز کاری طول می‌کشد. ارسال اکسپرس برای تحویل ۱ تا ۲ روزه در دسترس است.",
       },
       {
-        question: "Do you offer free shipping?",
+        question: "آیا ارسال رایگان دارید؟",
         answer:
-          "Yes! We offer free standard shipping on all orders over $99. Orders under $99 have a flat shipping rate of $10.",
+          "بله! ما ارسال رایگان استاندارد برای تمام سفارشات بالای ۹۹۰,۰۰۰ تومان ارائه می‌دهیم.",
       },
       {
-        question: "Can I track my order?",
+        question: "آیا می‌توانم سفارشم را پیگیری کنم؟",
         answer:
-          "Absolutely! Once your order ships, you'll receive an email with tracking information. You can also track your order by logging into your account.",
-      },
-      {
-        question: "Do you ship internationally?",
-        answer:
-          "Yes, we ship to most countries worldwide. International shipping rates and delivery times vary by destination. You can see the shipping cost at checkout.",
+          "قطعاً! پس از ارسال سفارش، یک ایمیل با اطلاعات پیگیری دریافت خواهید کرد. همچنین می‌توانید با ورود به حساب کاربری سفارش خود را پیگیری کنید.",
       },
     ],
   },
   {
-    title: "Returns & Refunds",
+    title: "مرجوعی و بازپرداخت",
     faqs: [
       {
-        question: "What is your return policy?",
+        question: "سیاست مرجوعی شما چیست؟",
         answer:
-          "We offer a 30-day return policy for unused and unopened products. Items must be in their original packaging. Some items like opened cosmetics may not be eligible for return due to hygiene reasons.",
+          "ما سیاست مرجوعی ۳۰ روزه برای محصولات استفاده نشده و باز نشده ارائه می‌دهیم. کالاها باید در بسته‌بندی اصلی خود باشند.",
       },
       {
-        question: "How do I initiate a return?",
+        question: "چگونه مرجوعی را شروع کنم؟",
         answer:
-          "To start a return, log into your account, go to your order history, and select the item you'd like to return. You'll receive a prepaid shipping label via email.",
+          "برای شروع مرجوعی، به حساب کاربری خود وارد شوید، به تاریخچه سفارشات بروید و کالایی را که می‌خواهید برگردانید انتخاب کنید.",
       },
       {
-        question: "When will I receive my refund?",
+        question: "کی بازپرداخت دریافت می‌کنم؟",
         answer:
-          "Once we receive and inspect your return, refunds are processed within 5-7 business days. The refund will be credited to your original payment method.",
+          "پس از دریافت و بررسی مرجوعی شما، بازپرداخت‌ها در عرض ۵ تا ۷ روز کاری پردازش می‌شوند.",
       },
     ],
   },
   {
-    title: "Products & Ingredients",
+    title: "محصولات و مواد تشکیل‌دهنده",
     faqs: [
       {
-        question: "Are your products cruelty-free?",
+        question: "آیا محصولات شما بدون آزمایش روی حیوانات هستند؟",
         answer:
-          "Yes! We are committed to cruelty-free beauty. None of our products or ingredients are tested on animals, and we don't sell in markets that require animal testing.",
+          "بله! ما متعهد به زیبایی بدون آزار حیوانات هستیم. هیچ یک از محصولات یا مواد ما روی حیوانات آزمایش نمی‌شوند.",
       },
       {
-        question: "Are your products suitable for sensitive skin?",
+        question: "آیا محصولات شما برای پوست حساس مناسب هستند؟",
         answer:
-          "Many of our products are formulated for sensitive skin. Look for products labeled 'gentle' or 'for sensitive skin.' We recommend doing a patch test before first use.",
+          "بسیاری از محصولات ما برای پوست حساس فرموله شده‌اند. به دنبال محصولاتی با برچسب 'ملایم' یا 'برای پوست حساس' باشید.",
       },
       {
-        question: "Do you have vegan products?",
+        question: "آیا محصولات گیاهی دارید؟",
         answer:
-          "Yes! We offer a wide range of vegan products. You can filter by 'vegan' on our shop page or look for the vegan label on product pages.",
-      },
-      {
-        question: "How should I store my products?",
-        answer:
-          "Most products should be stored in a cool, dry place away from direct sunlight. Some products like vitamin C serums benefit from refrigeration. Check the product label for specific storage instructions.",
+          "بله! ما طیف گسترده‌ای از محصولات گیاهی ارائه می‌دهیم. می‌توانید با فیلتر 'گیاهی' در صفحه فروشگاه جستجو کنید.",
       },
     ],
   },
   {
-    title: "Account & Payment",
+    title: "حساب کاربری و پرداخت",
     faqs: [
       {
-        question: "What payment methods do you accept?",
+        question: "چه روش‌های پرداختی قبول می‌کنید؟",
         answer:
-          "We accept all major credit cards (Visa, Mastercard, American Express), PayPal, Apple Pay, and Google Pay. All transactions are securely encrypted.",
+          "ما تمام کارت‌های اعتباری اصلی، درگاه‌های پرداخت آنلاین و پرداخت در محل را قبول می‌کنیم. تمام تراکنش‌ها به صورت امن رمزگذاری می‌شوند.",
       },
       {
-        question: "Is it safe to shop on your website?",
+        question: "آیا خرید از وبسایت شما امن است؟",
         answer:
-          "Absolutely! We use industry-standard SSL encryption to protect your personal and payment information. We never store your full credit card details.",
+          "قطعاً! ما از رمزگذاری SSL استاندارد صنعت برای محافظت از اطلاعات شخصی و پرداخت شما استفاده می‌کنیم.",
       },
       {
-        question: "How do I reset my password?",
+        question: "چگونه رمز عبورم را بازیابی کنم؟",
         answer:
-          "Click 'Forgot Password' on the login page and enter your email address. You'll receive a link to reset your password. If you don't see the email, check your spam folder.",
+          "روی 'فراموشی رمز عبور' در صفحه ورود کلیک کنید و آدرس ایمیل خود را وارد کنید. یک لینک برای بازیابی رمز عبور دریافت خواهید کرد.",
       },
     ],
   },
@@ -100,21 +91,16 @@ const faqCategories = [
 
 export default function FAQPage() {
   return (
-    <div className="py-8 lg:py-12">
-      <div className="container-custom">
-        {/* Page Header */}
-        <div className="text-center mb-12">
-          <span className="inline-block text-primary font-display text-lg italic mb-2">
-            Help Center
-          </span>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">
-            Frequently Asked Questions
-          </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Find answers to common questions about orders, shipping, returns,
-            and more. Can&apos;t find what you&apos;re looking for? Contact us!
-          </p>
-        </div>
+    <>
+      <PageHeader
+        title="سوالات متداول"
+        breadcrumbs={[
+          { label: "خانه", href: "/" },
+          { label: "سوالات متداول" },
+        ]}
+      />
+      <div className="py-8 lg:py-12">
+        <div className="container-custom">
 
         {/* FAQ Sections */}
         <div className="max-w-3xl mx-auto space-y-8">
@@ -143,19 +129,20 @@ export default function FAQPage() {
 
         {/* Contact CTA */}
         <div className="text-center mt-16 p-8 bg-muted/50 rounded-2xl">
-          <h2 className="text-2xl font-bold mb-4">Still have questions?</h2>
+          <h2 className="text-2xl font-bold mb-4">هنوز سوالی دارید؟</h2>
           <p className="text-muted-foreground mb-6">
-            Our support team is here to help you with any questions or concerns.
+            تیم پشتیبانی ما آماده کمک به شما در هر سوال یا نگرانی است.
           </p>
           <a
             href="/contact"
             className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
           >
-            Contact Support
+            تماس با پشتیبانی
           </a>
         </div>
       </div>
     </div>
+    </>
   );
 }
 

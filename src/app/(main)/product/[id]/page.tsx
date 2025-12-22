@@ -20,7 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCartStore } from "@/stores/cart-store";
 import { useWishlistStore } from "@/stores/wishlist-store";
 import { getProductById, products } from "@/data/products";
-import { ProductCard } from "@/features/products";
+import { ProductCard } from "@/features/products/components/product-card";
 
 interface ProductPageProps {
   params: { id: string };

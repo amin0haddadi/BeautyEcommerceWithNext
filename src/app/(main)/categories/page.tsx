@@ -1,24 +1,22 @@
 import Link from "next/link";
 import Image from "next/image";
 import { categories } from "@/data/categories";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function CategoriesPage() {
   return (
-    <div className="py-8 lg:py-12">
-      <div className="container-custom">
-        {/* Page Header */}
-        <div className="text-center mb-12">
-          <span className="inline-block text-primary font-display text-lg italic mb-2">
-            Browse
-          </span>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">
-            Shop by Category
-          </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Explore our curated collection of beauty products organized by
-            category. Find exactly what you&apos;re looking for.
-          </p>
-        </div>
+    <>
+      {/* Page Header */}
+      <PageHeader
+        title="دسته‌بندی‌ها"
+        breadcrumbs={[
+          { label: "خانه", href: "/" },
+          { label: "دسته‌بندی‌ها" },
+        ]}
+      />
+
+      <div className="py-8 lg:py-12">
+        <div className="container-custom">
 
         {/* Categories Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -40,7 +38,7 @@ export default function CategoriesPage() {
                   {category.name}
                 </h2>
                 <span className="text-white/80 text-sm group-hover:text-primary transition-colors">
-                  Shop Now →
+                  خرید کنید ←
                 </span>
               </div>
             </Link>
@@ -48,6 +46,7 @@ export default function CategoriesPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

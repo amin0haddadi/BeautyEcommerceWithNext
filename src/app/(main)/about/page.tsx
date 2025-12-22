@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { Advantages } from "@/features/landing";
-import { PageHeader } from "@/components/ui";
+import { Advantages } from "@/features/landing/components/advantages";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function AboutPage() {
   return (

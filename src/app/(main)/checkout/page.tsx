@@ -9,11 +9,12 @@ import { cn, formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCartStore } from "@/stores/cart-store";
+import { PageHeader } from "@/components/ui/page-header";
 
 const steps = [
-  { id: 1, name: "Shipping", icon: Truck },
-  { id: 2, name: "Payment", icon: CreditCard },
-  { id: 3, name: "Review", icon: Package },
+  { id: 1, name: "ارسال", icon: Truck },
+  { id: 2, name: "پرداخت", icon: CreditCard },
+  { id: 3, name: "بررسی", icon: Package },
 ];
 
 export default function CheckoutPage() {
@@ -29,24 +30,33 @@ export default function CheckoutPage() {
     city: "",
     state: "",
     zipCode: "",
-    country: "United States",
+    country: "ایران",
   });
 
   if (items.length === 0) {
     return (
-      <div className="py-16 lg:py-24">
-        <div className="container-custom">
-          <div className="text-center max-w-md mx-auto">
-            <h1 className="text-2xl font-bold mb-4">No items to checkout</h1>
-            <p className="text-muted-foreground mb-8">
-              Add some items to your cart first.
-            </p>
-            <Button asChild size="lg">
-              <Link href="/shop">Continue Shopping</Link>
-            </Button>
+      <>
+        <PageHeader
+          title="تسویه حساب"
+          breadcrumbs={[
+            { label: "خانه", href: "/" },
+            { label: "تسویه حساب" },
+          ]}
+        />
+        <div className="py-16 lg:py-24">
+          <div className="container-custom">
+            <div className="text-center max-w-md mx-auto">
+              <h2 className="text-2xl font-bold mb-4">محصولی برای پرداخت وجود ندارد</h2>
+              <p className="text-muted-foreground mb-8">
+                ابتدا چند محصول به سبد خرید خود اضافه کنید.
+              </p>
+              <Button asChild size="lg">
+                <Link href="/shop">ادامه خرید</Link>
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -66,14 +76,21 @@ export default function CheckoutPage() {
       // Place order
       clearCart();
       router.push("/");
-      alert("Order placed successfully!");
+      alert("سفارش با موفقیت ثبت شد!");
     }
   };
 
   return (
-    <div className="py-8 lg:py-12">
-      <div className="container-custom">
-        <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+    <>
+      <PageHeader
+        title="تسویه حساب"
+        breadcrumbs={[
+          { label: "خانه", href: "/" },
+          { label: "تسویه حساب" },
+        ]}
+      />
+      <div className="py-8 lg:py-12">
+        <div className="container-custom">
 
         {/* Steps */}
         <div className="flex items-center justify-center mb-12">
@@ -350,6 +367,7 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

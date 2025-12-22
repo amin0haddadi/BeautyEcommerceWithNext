@@ -8,37 +8,45 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PageHeader } from "@/components/ui/page-header";
 
 const orders = [
   {
     id: "ORD-001",
-    date: "Dec 15, 2024",
+    date: "۱۵ آذر ۱۴۰۳",
     status: "delivered",
     total: 299.95,
     items: 3,
   },
   {
     id: "ORD-002",
-    date: "Dec 10, 2024",
+    date: "۱۰ آذر ۱۴۰۳",
     status: "shipped",
     total: 149.99,
     items: 2,
   },
   {
     id: "ORD-003",
-    date: "Dec 5, 2024",
+    date: "۵ آذر ۱۴۰۳",
     status: "processing",
     total: 89.95,
     items: 1,
   },
 ];
 
+const statusLabels = {
+  delivered: "تحویل شده",
+  shipped: "ارسال شده",
+  processing: "در حال پردازش",
+  cancelled: "لغو شده",
+};
+
 export default function ProfilePage() {
   const [profile, setProfile] = useState({
-    firstName: "Jane",
-    lastName: "Doe",
-    email: "jane@example.com",
-    phone: "+1 234 567 890",
+    firstName: "سارا",
+    lastName: "محمدی",
+    email: "sara@example.com",
+    phone: "۰۹۱۲۱۲۳۴۵۶۷",
   });
 
   const statusColors = {
@@ -49,9 +57,16 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="py-8 lg:py-12">
-      <div className="container-custom">
-        <h1 className="text-3xl font-bold mb-8">My Account</h1>
+    <>
+      <PageHeader
+        title="حساب کاربری"
+        breadcrumbs={[
+          { label: "خانه", href: "/" },
+          { label: "حساب کاربری" },
+        ]}
+      />
+      <div className="py-8 lg:py-12">
+        <div className="container-custom">
 
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Sidebar */}
@@ -196,7 +211,7 @@ export default function ProfilePage() {
                               ]
                             )}
                           >
-                            {order.status}
+                            {statusLabels[order.status as keyof typeof statusLabels]}
                           </span>
                           <span className="font-semibold">
                             ${order.total.toFixed(2)}
@@ -259,6 +274,7 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

@@ -33,8 +33,8 @@ export function PageHeader({ title, breadcrumbs }: PageHeaderProps) {
       </div>
 
       {/* Content */}
-      <div className="container-custom">
-        <h1 className="text-[55px] md:text-[70px] font-bold text-[#222222] leading-tight mb-2">
+      <div className="container-custom text-center flex flex-col justify-center items-center gap-10">
+        <h1 className="text-[45px] md:text-[60px] font-bold text-[#222222] leading-tight text-center">
           {title}
         </h1>
 

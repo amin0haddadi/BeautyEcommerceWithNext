@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import { Button, Input, PageHeader } from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({

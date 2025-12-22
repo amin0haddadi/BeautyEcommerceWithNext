@@ -6,6 +6,7 @@ import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 import { cn, formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cart-store";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotal, clearCart } =
@@ -13,22 +14,31 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="py-16 lg:py-24">
-        <div className="container-custom">
-          <div className="text-center max-w-md mx-auto">
-            <div className="h-24 w-24 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">
-              <ShoppingBag className="h-12 w-12 text-muted-foreground" />
+      <>
+        <PageHeader
+          title="سبد خرید"
+          breadcrumbs={[
+            { label: "خانه", href: "/" },
+            { label: "سبد خرید" },
+          ]}
+        />
+        <div className="py-16 lg:py-24">
+          <div className="container-custom">
+            <div className="text-center max-w-md mx-auto">
+              <div className="h-24 w-24 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">
+                <ShoppingBag className="h-12 w-12 text-muted-foreground" />
+              </div>
+              <h2 className="text-2xl font-bold mb-4">سبد خرید شما خالی است</h2>
+              <p className="text-muted-foreground mb-8">
+                به نظر می‌رسد هنوز چیزی به سبد خرید خود اضافه نکرده‌اید.
+              </p>
+              <Button asChild size="lg">
+                <Link href="/shop">شروع خرید</Link>
+              </Button>
             </div>
-            <h1 className="text-2xl font-bold mb-4">Your cart is empty</h1>
-            <p className="text-muted-foreground mb-8">
-              Looks like you haven&apos;t added anything to your cart yet.
-            </p>
-            <Button asChild size="lg">
-              <Link href="/shop">Start Shopping</Link>
-            </Button>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -37,9 +47,16 @@ export default function CartPage() {
   const total = subtotal + shipping;
 
   return (
-    <div className="py-8 lg:py-12">
-      <div className="container-custom">
-        <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
+    <>
+      <PageHeader
+        title="سبد خرید"
+        breadcrumbs={[
+          { label: "خانه", href: "/" },
+          { label: "سبد خرید" },
+        ]}
+      />
+      <div className="py-8 lg:py-12">
+        <div className="container-custom">
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}
@@ -186,6 +203,7 @@ export default function CartPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

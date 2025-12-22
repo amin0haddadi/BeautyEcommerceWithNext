@@ -1,92 +1,88 @@
 import Link from "next/link";
 import Image from "next/image";
+import { PageHeader } from "@/components/ui/page-header";
 
 const blogPosts = [
   {
     id: "1",
     slug: "skincare-routine-for-beginners",
-    title: "The Ultimate Skincare Routine for Beginners",
+    title: "راهنمای کامل مراقبت از پوست برای مبتدیان",
     image: "/assets/img/blog-img1.jpg",
-    date: "Dec 15, 2024",
-    author: "Sarah Johnson",
-    category: "Skincare",
+    date: "۱۵ آذر ۱۴۰۳",
+    author: "سارا محمدی",
+    category: "مراقبت پوست",
     excerpt:
-      "Starting a skincare routine can feel overwhelming. Here's our guide to building a simple, effective routine that works.",
+      "شروع یک روتین مراقبت از پوست می‌تواند دلهره‌آور باشد. این راهنمای ما برای ساختن یک روتین ساده و موثر است.",
   },
   {
     id: "2",
     slug: "makeup-trends-2024",
-    title: "Top Makeup Trends to Watch in 2024",
+    title: "برترین ترندهای آرایش در سال ۱۴۰۳",
     image: "/assets/img/blog-img2.jpg",
-    date: "Dec 10, 2024",
-    author: "Emily Chen",
-    category: "Makeup",
+    date: "۱۰ آذر ۱۴۰۳",
+    author: "مریم احمدی",
+    category: "آرایش",
     excerpt:
-      "From glass skin to bold lips, discover the makeup trends that are defining beauty this year.",
+      "از پوست شیشه‌ای تا لب‌های جسورانه، ترندهای آرایشی که امسال زیبایی را تعریف می‌کنند را کشف کنید.",
   },
   {
     id: "3",
     slug: "natural-ingredients-guide",
-    title: "A Guide to Natural Beauty Ingredients",
+    title: "راهنمای مواد زیبایی طبیعی",
     image: "/assets/img/blog-img3.jpg",
-    date: "Dec 5, 2024",
-    author: "Michael Park",
-    category: "Ingredients",
+    date: "۵ آذر ۱۴۰۳",
+    author: "علی رضایی",
+    category: "مواد تشکیل‌دهنده",
     excerpt:
-      "Learn about the natural ingredients that can transform your beauty routine and why they work.",
+      "درباره مواد طبیعی که می‌توانند روتین زیبایی شما را متحول کنند و دلیل کارآمدی آن‌ها بیاموزید.",
   },
   {
     id: "4",
     slug: "hair-care-winter-tips",
-    title: "Winter Hair Care: Keep Your Locks Healthy",
+    title: "مراقبت از مو در زمستان",
     image: "/assets/img/blog-img4.jpg",
-    date: "Nov 28, 2024",
-    author: "Lisa Wang",
-    category: "Hair Care",
+    date: "۲۸ آبان ۱۴۰۳",
+    author: "لیلا کریمی",
+    category: "مراقبت مو",
     excerpt:
-      "Cold weather can be tough on your hair. Here are our top tips for maintaining healthy hair all winter long.",
+      "هوای سرد می‌تواند برای موهای شما سخت باشد. نکات برتر ما برای حفظ سلامت مو در طول زمستان.",
   },
   {
     id: "5",
     slug: "self-care-sunday-routine",
-    title: "Create Your Perfect Self-Care Sunday Routine",
+    title: "روتین کامل مراقبت از خود در یکشنبه‌ها",
     image: "/assets/img/blog-img5.jpg",
-    date: "Nov 20, 2024",
-    author: "Sarah Johnson",
-    category: "Wellness",
+    date: "۲۰ آبان ۱۴۰۳",
+    author: "سارا محمدی",
+    category: "سلامت",
     excerpt:
-      "Transform your Sundays into a rejuvenating self-care ritual with our step-by-step guide.",
+      "یکشنبه‌های خود را با راهنمای گام به گام ما به یک آیین مراقبت از خود تبدیل کنید.",
   },
   {
     id: "6",
     slug: "fragrance-layering-tips",
-    title: "The Art of Fragrance Layering",
+    title: "هنر لایه‌بندی عطر",
     image: "/assets/img/blog-img6.jpg",
-    date: "Nov 15, 2024",
-    author: "Emily Chen",
-    category: "Fragrance",
+    date: "۱۵ آبان ۱۴۰۳",
+    author: "مریم احمدی",
+    category: "عطر",
     excerpt:
-      "Discover how to create your signature scent by mastering the art of fragrance layering.",
+      "کشف کنید چگونه با تسلط بر هنر لایه‌بندی عطر، عطر امضای خود را بسازید.",
   },
 ];
 
 export default function BlogPage() {
   return (
-    <div className="py-8 lg:py-12">
-      <div className="container-custom">
-        {/* Page Header */}
-        <div className="text-center mb-12">
-          <span className="inline-block text-primary font-display text-lg italic mb-2">
-            Latest
-          </span>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">
-            Beauty Blog
-          </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Tips, trends, and insights from our beauty experts to help you look
-            and feel your best.
-          </p>
-        </div>
+    <>
+      <PageHeader
+        title="وبلاگ زیبایی"
+        breadcrumbs={[
+          { label: "خانه", href: "/" },
+          { label: "وبلاگ" },
+        ]}
+      />
+      <div className="py-8 lg:py-12">
+        <div className="container-custom">
 
         {/* Featured Post */}
         <div className="mb-12">
@@ -116,9 +112,9 @@ export default function BlogPage() {
               <p className="text-muted-foreground mb-4">
                 {blogPosts[0].excerpt}
               </p>
-              <p className="text-sm text-muted-foreground">
-                By {blogPosts[0].author}
-              </p>
+                <p className="text-sm text-muted-foreground">
+                  نویسنده: {blogPosts[0].author}
+                </p>
             </div>
           </Link>
         </div>
@@ -159,6 +155,7 @@ export default function BlogPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

@@ -2,7 +2,8 @@
 
 import { useState, useMemo } from "react";
 import { Filter } from "lucide-react";
-import { Button, PageHeader } from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   Select,
   SelectContent,
@@ -10,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ProductGrid } from "@/features/products";
+import { ProductGrid } from "@/features/products/components/product-grid";
 import { products as allProducts } from "@/data/products";
 import { categories } from "@/data/categories";
 import { cn } from "@/lib/utils";
