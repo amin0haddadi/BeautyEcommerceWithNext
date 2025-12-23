@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { Noto_Nastaliq_Urdu } from "next/font/google";
+import { rootMetadata } from "@/config/metadata";
 import "./globals.css";
 
 const nastaliq = Noto_Nastaliq_Urdu({
@@ -9,23 +9,7 @@ const nastaliq = Noto_Nastaliq_Urdu({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "بی‌شاپ - زیبایی و مراقبت",
-    template: "%s | بی‌شاپ",
-  },
-  description:
-    "پوست خود را با محصولات آرایشی بدون سموم تغذیه کنید. محصولات زیبایی و مراقبت حرفه‌ای با پیشنهادهایی که نمی‌توانید رد کنید.",
-  keywords: [
-    "زیبایی",
-    "لوازم آرایشی",
-    "مراقبت پوست",
-    "آرایش",
-    "مراقبت مو",
-    "عطر",
-    "اسپا",
-  ],
-};
+export const metadata = rootMetadata;
 
 export default function RootLayout({
   children,
@@ -34,9 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fa" dir="rtl" className={nastaliq.variable}>
-      <body className={`${nastaliq.className} min-h-screen flex flex-col`}>{children}</body>
+      <body className={`${nastaliq.className} min-h-screen flex flex-col`}>
+        {children}
+      </body>
     </html>
   );
 }
-
-

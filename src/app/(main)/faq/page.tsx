@@ -1,10 +1,20 @@
+import type { Metadata } from "next";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { generatePageMetadata } from "@/lib/metadata-helpers";
 import { PageHeader } from "@/components/ui/page-header";
+
+export const metadata: Metadata = generatePageMetadata({
+  title: "سوالات متداول",
+  description:
+    "پاسخ به سوالات متداول درباره محصولات، سفارشات، ارسال، بازگشت کالا و خدمات ما. اگر سوالی دارید، اینجا را بررسی کنید.",
+  url: "/faq",
+  keywords: ["سوالات متداول", "FAQ", "راهنما", "پشتیبانی"],
+});
 
 const faqCategories = [
   {

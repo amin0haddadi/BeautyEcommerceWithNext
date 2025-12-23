@@ -1,6 +1,24 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { generatePageMetadata } from "@/lib/metadata-helpers";
 import { PageHeader } from "@/components/ui/page-header";
+
+export const metadata: Metadata = generatePageMetadata({
+  title: "وبلاگ زیبایی",
+  description:
+    "مقالات و راهنمای‌های تخصصی در زمینه زیبایی، مراقبت پوست، آرایش و سلامت. نکات و ترفندهای حرفه‌ای برای داشتن پوست و موی سالم و زیبا.",
+  image: "/assets/img/blog-img1.jpg",
+  url: "/blog",
+  type: "article",
+  keywords: [
+    "وبلاگ زیبایی",
+    "مقالات زیبایی",
+    "راهنمای مراقبت پوست",
+    "نکات آرایشی",
+    "سلامت پوست",
+  ],
+});
 
 const blogPosts = [
   {

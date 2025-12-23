@@ -1,7 +1,26 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { generatePageMetadata } from "@/lib/metadata-helpers";
 import { categories } from "@/data/categories";
 import { PageHeader } from "@/components/ui/page-header";
+
+export const metadata: Metadata = generatePageMetadata({
+  title: "دسته‌بندی‌ها",
+  description:
+    "مرور دسته‌بندی‌های مختلف محصولات زیبایی: آرایش، مراقبت پوست، مو، عطر، اسپا و ناخن. پیدا کردن محصولات مورد علاقه خود را آسان کنید.",
+  image: "/assets/img/top-categories-img1.jpg",
+  url: "/categories",
+  keywords: [
+    "دسته‌بندی محصولات",
+    "آرایش",
+    "مراقبت پوست",
+    "مو",
+    "عطر",
+    "اسپا",
+    "ناخن",
+  ],
+});
 
 export default function CategoriesPage() {
   return (

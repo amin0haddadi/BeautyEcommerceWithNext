@@ -1,6 +1,17 @@
+import type { Metadata } from "next";
 import Image from "next/image";
+import { generatePageMetadata } from "@/lib/metadata-helpers";
 import { Advantages } from "@/features/landing/components/advantages";
 import { PageHeader } from "@/components/ui/page-header";
+
+export const metadata: Metadata = generatePageMetadata({
+  title: "درباره ما",
+  description:
+    "درباره خانم خانوما - ما با ماموریت ساده‌ای شروع کردیم: در دسترس قرار دادن محصولات زیبایی با کیفیت برای همه. از یک فروشگاه کوچک آنلاین به یک مقصد محبوب برای علاقه‌مندان به زیبایی در سراسر جهان تبدیل شدیم.",
+  image: "/assets/img/info-item-img1.jpg",
+  url: "/about",
+  keywords: ["درباره ما", "تاریخچه", "ماموریت", "ارزش‌ها"],
+});
 
 export default function AboutPage() {
   return (

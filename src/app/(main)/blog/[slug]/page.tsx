@@ -1,19 +1,113 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Calendar, User, Tag } from "lucide-react";
+import { generatePageMetadata } from "@/lib/metadata-helpers";
 
 interface BlogPostPageProps {
   params: { slug: string };
 }
 
+// Mock blog posts data - in real app, fetch from API/database
+const blogPosts: Record<
+  string,
+  {
+    title: string;
+    excerpt: string;
+    image: string;
+    author: string;
+    date: string;
+    category: string;
+    content?: string;
+  }
+> = {
+  "skincare-routine-for-beginners": {
+    title: "راهنمای کامل مراقبت از پوست برای مبتدیان",
+    excerpt:
+      "شروع یک روتین مراقبت از پوست می‌تواند دلهره‌آور باشد. این راهنمای ما برای ساختن یک روتین ساده و موثر است.",
+    image: "/assets/img/blog-img1.jpg",
+    author: "سارا محمدی",
+    date: "۱۵ آذر ۱۴۰۳",
+    category: "مراقبت پوست",
+  },
+  "makeup-trends-2024": {
+    title: "برترین ترندهای آرایش در سال ۱۴۰۳",
+    excerpt:
+      "از پوست شیشه‌ای تا لب‌های جسورانه، ترندهای آرایشی که امسال زیبایی را تعریف می‌کنند را کشف کنید.",
+    image: "/assets/img/blog-img2.jpg",
+    author: "مریم احمدی",
+    date: "۱۰ آذر ۱۴۰۳",
+    category: "آرایش",
+  },
+  "natural-ingredients-guide": {
+    title: "راهنمای مواد زیبایی طبیعی",
+    excerpt:
+      "درباره مواد طبیعی که می‌توانند روتین زیبایی شما را متحول کنند و دلیل کارآمدی آن‌ها بیاموزید.",
+    image: "/assets/img/blog-img3.jpg",
+    author: "علی رضایی",
+    date: "۵ آذر ۱۴۰۳",
+    category: "مواد تشکیل‌دهنده",
+  },
+  "hair-care-winter-tips": {
+    title: "مراقبت از مو در زمستان",
+    excerpt:
+      "هوای سرد می‌تواند برای موهای شما سخت باشد. نکات برتر ما برای حفظ سلامت مو در طول زمستان.",
+    image: "/assets/img/blog-img4.jpg",
+    author: "لیلا کریمی",
+    date: "۲۸ آبان ۱۴۰۳",
+    category: "مراقبت مو",
+  },
+  "self-care-sunday-routine": {
+    title: "روتین کامل مراقبت از خود در یکشنبه‌ها",
+    excerpt:
+      "یکشنبه‌های خود را با راهنمای گام به گام ما به یک آیین مراقبت از خود تبدیل کنید.",
+    image: "/assets/img/blog-img5.jpg",
+    author: "سارا محمدی",
+    date: "۲۰ آبان ۱۴۰۳",
+    category: "سلامت",
+  },
+  "fragrance-layering-tips": {
+    title: "هنر لایه‌بندی عطر",
+    excerpt:
+      "کشف کنید چگونه با تسلط بر هنر لایه‌بندی عطر، عطر امضای خود را بسازید.",
+    image: "/assets/img/blog-img6.jpg",
+    author: "مریم احمدی",
+    date: "۱۵ آبان ۱۴۰۳",
+    category: "عطر",
+  },
+};
+
+export async function generateMetadata({
+  params,
+}: BlogPostPageProps): Promise<Metadata> {
+  const post = blogPosts[params.slug];
+
+  if (!post) {
+    return generatePageMetadata({
+      title: "مقاله یافت نشد",
+      description: "مقاله مورد نظر یافت نشد.",
+      url: `/blog/${params.slug}`,
+    });
+  }
+
+  return generatePageMetadata({
+    title: post.title,
+    description: post.excerpt,
+    image: post.image,
+    url: `/blog/${params.slug}`,
+    type: "article",
+    keywords: [post.category, "زیبایی", "مقالات"],
+  });
+}
+
 export default function BlogPostPage({ params }: BlogPostPageProps) {
-  // In a real app, fetch the post by slug
-  const post = {
+  const defaultPost = {
     title: "The Ultimate Skincare Routine for Beginners",
     image: "/assets/img/post-img.jpg",
     date: "Dec 15, 2024",
     author: "Sarah Johnson",
     category: "Skincare",
+    excerpt: "Starting a skincare routine can feel overwhelming.",
     content: `
       <p>Starting a skincare routine can feel overwhelming with so many products and steps to consider. But here's the good news: an effective skincare routine doesn't have to be complicated. In fact, a simple, consistent routine is often more beneficial than a complex one.</p>
       
@@ -55,6 +149,8 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
       <p>Starting a skincare routine is a form of self-care that pays dividends over time. Be patient with yourself and your skin, and enjoy the journey to healthier, more radiant skin.</p>
     `,
   };
+
+  const post = blogPosts[params.slug] || defaultPost;
 
   return (
     <div className="py-8 lg:py-12">
@@ -108,10 +204,16 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
 
           {/* Content */}
-          <div
-            className="prose prose-lg max-w-none prose-headings:font-bold prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-p:text-muted-foreground prose-p:leading-relaxed prose-li:text-muted-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline"
-            dangerouslySetInnerHTML={{ __html: post.content }}
-          />
+          {post.content ? (
+            <div
+              className="prose prose-lg max-w-none prose-headings:font-bold prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-p:text-muted-foreground prose-p:leading-relaxed prose-li:text-muted-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+          ) : (
+            <div className="prose prose-lg max-w-none">
+              <p className="text-muted-foreground">{post.excerpt}</p>
+            </div>
+          )}
 
           {/* Tags */}
           <div className="flex items-center gap-2 mt-8 pt-8 border-t">
