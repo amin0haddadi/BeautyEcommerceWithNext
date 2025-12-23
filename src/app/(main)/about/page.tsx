@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/ui/page-header";
 export const metadata: Metadata = generatePageMetadata({
   title: "درباره ما",
   description:
-    "درباره خانم خانوما - ما با ماموریت ساده‌ای شروع کردیم: در دسترس قرار دادن محصولات زیبایی با کیفیت برای همه. از یک فروشگاه کوچک آنلاین به یک مقصد محبوب برای علاقه‌مندان به زیبایی در سراسر جهان تبدیل شدیم.",
+    "درباره خانم خانما - ما با ماموریت ساده‌ای شروع کردیم: در دسترس قرار دادن محصولات زیبایی با کیفیت برای همه. از یک فروشگاه کوچک آنلاین به یک مقصد محبوب برای علاقه‌مندان به زیبایی در سراسر جهان تبدیل شدیم.",
   image: "/assets/img/info-item-img1.jpg",
   url: "/about",
   keywords: ["درباره ما", "تاریخچه", "ماموریت", "ارزش‌ها"],
@@ -38,7 +38,7 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-muted-foreground">
                 <p>
-                  خانم خانوما با ماموریت ساده‌ای شروع کرد: در دسترس قرار دادن
+                  خانم خانما با ماموریت ساده‌ای شروع کرد: در دسترس قرار دادن
                   محصولات زیبایی با کیفیت برای همه. آنچه به عنوان یک فروشگاه
                   کوچک آنلاین شروع شد، به یک مقصد محبوب برای علاقه‌مندان به
                   زیبایی در سراسر جهان تبدیل شده است.
@@ -141,7 +141,7 @@ export default function AboutPage() {
                 <p>
                   From our buyers who travel the world to discover new brands,
                   to our customer care team who&apos;s always ready to help,
-                  هر عضو خانواده خانم خانوما متعهد به رضایت شما است.
+                  هر عضو خانواده خانم خانما متعهد به رضایت شما است.
                 </p>
               </div>
             </div>

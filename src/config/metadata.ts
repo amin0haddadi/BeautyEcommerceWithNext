@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 
 const rootMetadata: Metadata = {
   title: {
-    template: "%s - خانم خانوما",
-    default: "خانم خانوما",
+    template: "%s - خانم خانما",
+    default: "خانم خانما",
   },
   description:
     "پوست خود را با محصولات آرایشی بدون سموم تغذیه کنید. محصولات زیبایی و مراقبت حرفه‌ای با پیشنهادهایی که نمی‌توانید رد کنید.",

@@ -37,7 +37,7 @@ export function generatePageMetadata({
       title,
       description,
       url: fullUrl,
-      siteName: "خانم خانوما",
+      siteName: "خانم خانما",
       images: [
         {
           url: fullImageUrl,

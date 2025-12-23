@@ -55,13 +55,19 @@ export function Header() {
             <div className="flex items-center justify-between">
               {/* Logo */}
               <Link href="/" className="flex-shrink-0">
-                <Image
-                  src="/assets/img/header-logo.svg"
-                  alt="خانم خانوما"
-                  width={120}
-                  height={40}
-                  priority
-                />
+                <div className="relative">
+                  <Image
+                    src="/assets/img/logo.png"
+                    alt="خانم خانما"
+                    width={180}
+                    height={60}
+                    priority
+                    className="logo-header"
+                    style={{
+                      filter: 'brightness(0) saturate(100%) invert(18%) sepia(95%) saturate(3000%) hue-rotate(320deg) brightness(0.6) contrast(1.3)',
+                    }}
+                  />
+                </div>
               </Link>
 
               {/* Desktop Navigation */}

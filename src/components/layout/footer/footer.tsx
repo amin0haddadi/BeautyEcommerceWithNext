@@ -61,12 +61,18 @@ export function Footer() {
 
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
-            <Image
-              src="/assets/img/footer-logo.svg"
-              alt="خانم خانوما"
-              width={120}
-              height={40}
-            />
+            <div className="relative">
+              <Image
+                src="/assets/img/logo.png"
+                alt="خانم خانما"
+                width={180}
+                height={60}
+                className="logo-footer"
+                style={{
+                  filter: 'brightness(0) saturate(100%) invert(30%) sepia(70%) saturate(1200%) hue-rotate(320deg) brightness(1.8) contrast(0.75)',
+                }}
+              />
+            </div>
           </Link>
 
           {/* Payment Methods */}
@@ -152,7 +158,7 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="container-custom py-6">
           <p className="text-center text-sm text-white/50">
-            © کلیه حقوق محفوظ است. خانم خانوما {new Date().getFullYear()}
+            © کلیه حقوق محفوظ است. خانم خانما {new Date().getFullYear()}
           </p>
         </div>
       </div>

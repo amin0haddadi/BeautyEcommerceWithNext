@@ -2,7 +2,7 @@ import type { Product } from "@/types";
 
 export const products: Product[] = [
   {
-    name: "Foundation خانم خانوما",
+    name: "Foundation خانم خانما",
     oldPrice: "249.95",
     price: "200.95",
     id: "12132klj2322",
@@ -34,7 +34,7 @@ export const products: Product[] = [
         reviewDate: "July 23, 2020",
         rating: 4,
         content:
-          "I am grateful to the employees of خانم خانوما for the quality products that I have been using for more than a year, try to work at this level in the future. Thank you",
+          "I am grateful to the employees of خانم خانما for the quality products that I have been using for more than a year, try to work at this level in the future. Thank you",
       },
       {
         author: {
@@ -44,7 +44,7 @@ export const products: Product[] = [
         reviewDate: "June 15, 2020",
         rating: 5,
         content:
-          "I am grateful to the employees of خانم خانوما for the quality products that I have been using for more than a year, try to work at this level in the future. Thank you). I am grateful to the employees of خانم خانوما for the quality products.",
+          "I am grateful to the employees of خانم خانما for the quality products that I have been using for more than a year, try to work at this level in the future. Thank you). I am grateful to the employees of خانم خانما for the quality products.",
       },
       {
         author: {
@@ -54,7 +54,7 @@ export const products: Product[] = [
         reviewDate: "July 05, 2020",
         rating: 3,
         content:
-          "I am grateful to the employees of خانم خانوما for the quality products that I have been using for more than a year, try to work at this level in the future. Thank you",
+          "I am grateful to the employees of خانم خانما for the quality products that I have been using for more than a year, try to work at this level in the future. Thank you",
       },
     ],
   },

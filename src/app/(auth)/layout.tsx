@@ -12,13 +12,18 @@ export default function AuthLayout({
       <div className="flex-1 flex flex-col justify-center px-4 sm:px-6 lg:px-8 py-12">
         <div className="mx-auto w-full max-w-md">
           <Link href="/" className="flex justify-center mb-8">
-            <Image
-              src="/assets/img/header-logo.svg"
-              alt="خانم خانوما"
-              width={140}
-              height={50}
-              priority
-            />
+            <div className="relative">
+              <Image
+                src="/assets/img/logo.png"
+                alt="خانم خانما"
+                width={180}
+                height={60}
+                priority
+                style={{
+                  filter: 'brightness(0) saturate(100%) invert(18%) sepia(90%) saturate(2500%) hue-rotate(320deg) brightness(0.75) contrast(1.2)',
+                }}
+              />
+            </div>
           </Link>
           {children}
         </div>

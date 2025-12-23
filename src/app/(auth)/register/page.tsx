@@ -28,7 +28,7 @@ export default function RegisterPage() {
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold mb-2">Create an account</h1>
         <p className="text-muted-foreground">
-          به خانم خانوما بپیوندید برای پیشنهادهای ویژه و به‌روزرسانی‌ها
+          به خانم خانما بپیوندید برای پیشنهادهای ویژه و به‌روزرسانی‌ها
         </p>
       </div>
 
