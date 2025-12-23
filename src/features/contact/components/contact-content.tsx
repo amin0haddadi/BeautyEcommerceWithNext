@@ -72,17 +72,17 @@ export function ContactContent() {
                   <h3 className="font-semibold mb-1">Email</h3>
                   <p className="text-muted-foreground text-sm">
                     <a
-                      href="mailto:info@beshop.com"
+                      href="mailto:info@khanoomkhanooma.com"
                       className="hover:text-primary"
                     >
-                      info@beshop.com
+                      info@khanoomkhanooma.com
                     </a>
                     <br />
                     <a
-                      href="mailto:support@beshop.com"
+                      href="mailto:support@khanoomkhanooma.com"
                       className="hover:text-primary"
                     >
-                      support@beshop.com
+                      support@khanoomkhanooma.com
                     </a>
                   </p>
                 </div>

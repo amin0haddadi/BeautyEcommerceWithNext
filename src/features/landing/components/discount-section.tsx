@@ -27,7 +27,7 @@ export function DiscountSection() {
           </h2>
           <p className="text-lg text-white/80 mb-8">
             روی همه محصولات زیبایی در این فصل. از کد تخفیف{" "}
-            <span className="font-bold text-white">BESHOP2024</span> استفاده کنید.
+            <span className="font-bold text-white">KHANOOMKHANOOMA2024</span> استفاده کنید.
           </p>
           <Button asChild size="xl" variant="outline" className="border-white text-white hover:bg-white hover:text-foreground">
             <Link href="/shop?filter=sale">خرید حراجی</Link>

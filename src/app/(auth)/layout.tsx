@@ -14,7 +14,7 @@ export default function AuthLayout({
           <Link href="/" className="flex justify-center mb-8">
             <Image
               src="/assets/img/header-logo.svg"
-              alt="BeShop"
+              alt="خانم خانوما"
               width={140}
               height={50}
               priority

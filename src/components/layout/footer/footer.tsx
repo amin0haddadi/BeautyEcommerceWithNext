@@ -63,7 +63,7 @@ export function Footer() {
           <Link href="/" className="flex-shrink-0">
             <Image
               src="/assets/img/footer-logo.svg"
-              alt="BeShop"
+              alt="خانم خانوما"
               width={120}
               height={40}
             />
@@ -137,10 +137,10 @@ export function Footer() {
               <li className="flex items-start gap-3">
                 <Mail className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                 <a
-                  href="mailto:info@beshop.ir"
+                  href="mailto:info@khanoomkhanooma.ir"
                   className="text-sm text-white/70 hover:text-primary transition-colors"
                 >
-                  info@beshop.ir
+                  info@khanoomkhanooma.ir
                 </a>
               </li>
             </ul>
@@ -152,7 +152,7 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="container-custom py-6">
           <p className="text-center text-sm text-white/50">
-            © کلیه حقوق محفوظ است. بی‌شاپ {new Date().getFullYear()}
+            © کلیه حقوق محفوظ است. خانم خانوما {new Date().getFullYear()}
           </p>
         </div>
       </div>

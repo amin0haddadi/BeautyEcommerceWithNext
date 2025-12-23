@@ -44,7 +44,7 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // BeShop custom colors
+        // خانم خانوما custom colors
         rose: {
           50: "#FFF5F5",
           100: "#FFEBEB",
@@ -69,7 +69,7 @@ const config: Config = {
           800: "#9D174D",
           900: "#831843",
         },
-        // Original BeShop pink color
+        // Original خانم خانوما pink color
         peach: {
           DEFAULT: "#fcedea",
           light: "#fef5f3",
@@ -120,5 +120,3 @@ const config: Config = {
 };
 
 export default config;
-
-

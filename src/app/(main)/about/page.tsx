@@ -38,10 +38,10 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-muted-foreground">
                 <p>
-                  BeShop was founded with a simple mission: to make premium
-                  beauty products accessible to everyone. What started as a
-                  small online store has grown into a beloved destination for
-                  beauty enthusiasts worldwide.
+                  خانم خانوما با ماموریت ساده‌ای شروع کرد: در دسترس قرار دادن
+                  محصولات زیبایی با کیفیت برای همه. آنچه به عنوان یک فروشگاه
+                  کوچک آنلاین شروع شد، به یک مقصد محبوب برای علاقه‌مندان به
+                  زیبایی در سراسر جهان تبدیل شده است.
                 </p>
                 <p>
                   We carefully curate our collection, partnering with brands
@@ -141,8 +141,7 @@ export default function AboutPage() {
                 <p>
                   From our buyers who travel the world to discover new brands,
                   to our customer care team who&apos;s always ready to help,
-                  every member of the BeShop family is committed to your
-                  satisfaction.
+                  هر عضو خانواده خانم خانوما متعهد به رضایت شما است.
                 </p>
               </div>
             </div>

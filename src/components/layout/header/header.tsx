@@ -32,7 +32,7 @@ export function Header() {
         {/* Promo Banner */}
         {isPromoVisible && (
           <div className="absolute top-0 right-0 w-full bg-[#222222] text-white py-3 px-4 text-center text-sm">
-            <span className="font-bold opacity-80">۳۰٪ تخفیف روی همه محصولات - کد تخفیف: beshop2024</span>
+            <span className="font-bold opacity-80">۳۰٪ تخفیف روی همه محصولات - کد تخفیف: khanoomkhanooma2024</span>
             <button
               onClick={hidePromo}
               className="absolute right-4 top-1/2 -translate-y-1/2 hover:opacity-70 transition-opacity"
@@ -57,7 +57,7 @@ export function Header() {
               <Link href="/" className="flex-shrink-0">
                 <Image
                   src="/assets/img/header-logo.svg"
-                  alt="BeShop"
+                  alt="خانم خانوما"
                   width={120}
                   height={40}
                   priority
