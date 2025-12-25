@@ -76,7 +76,7 @@ export function CartContent() {
                       {item.selectedColor && (
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-sm text-muted-foreground">
-                            Color:
+                            رنگ:
                           </span>
                           <div
                             className="w-4 h-4 rounded-full border"
@@ -137,25 +137,25 @@ export function CartContent() {
               className="text-muted-foreground"
               onClick={clearCart}
             >
-              Clear Cart
+              پاک کردن سبد
             </Button>
           </div>
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-card rounded-xl border p-6 sticky top-24">
-              <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
+              <h2 className="text-xl font-semibold mb-6">خلاصه سفارش</h2>
 
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="text-muted-foreground">جمع جزء</span>
                   <span>{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Shipping</span>
+                  <span className="text-muted-foreground">ارسال</span>
                   <span>
                     {shipping === 0 ? (
-                      <span className="text-green-600">Free</span>
+                      <span className="text-green-600">رایگان</span>
                     ) : (
                       formatPrice(shipping)
                     )}
@@ -163,21 +163,21 @@ export function CartContent() {
                 </div>
                 {shipping > 0 && (
                   <p className="text-xs text-muted-foreground">
-                    Free shipping on orders over $99
+                    ارسال رایگان برای سفارش‌های بالای ۹۹ دلار
                   </p>
                 )}
                 <div className="border-t pt-4 flex justify-between font-semibold text-lg">
-                  <span>Total</span>
+                  <span>جمع کل</span>
                   <span>{formatPrice(total)}</span>
                 </div>
               </div>
 
               <Button asChild className="w-full" size="lg">
-                <Link href="/checkout">Proceed to Checkout</Link>
+                <Link href="/checkout">ادامه به تسویه حساب</Link>
               </Button>
 
               <p className="text-center text-xs text-muted-foreground mt-4">
-                Taxes calculated at checkout
+                مالیات در تسویه حساب محاسبه می‌شود
               </p>
             </div>
           </div>

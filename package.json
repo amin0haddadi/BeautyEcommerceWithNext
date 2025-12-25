@@ -1,13 +1,13 @@
 {
-  "name": "beauty-ecommerce",
+  "name": "khanoomkhanooma",
+  "title": "خانم خانما",
+  "description": "فروشگاه زیبایی و مراقبت پوست",
+  "keywords": ["زیبایی", "لوازم آرایشی", "مراقبت پوست", "آرایش", "مراقبت مو", "عطر", "اسپا", "خرید آنلاین","خانم خانما","خانم خانوما"],
   "version": "2.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+  "author": {
+    "name": "Amin Haddadi"
   },
+  "private": true,
   "dependencies": {
     "next": "14.2.21",
     "react": "^18.3.1",

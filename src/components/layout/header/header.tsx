@@ -47,7 +47,7 @@ export function Header() {
         <div
           className={cn(
             "transition-all duration-300 px-[15px] md:px-[40px] lg:px-[70px]",
-            isPromoVisible ? "pt-[55px] md:pt-[72px]" : "pt-[45px] md:pt-[72px]",
+            isPromoVisible ? "pt-[55px] md:pt-10" : "pt-[45px] md:pt-1",
             isScrolled && "fixed top-0 left-0 right-0 shadow-md bg-peach/90 !pt-5 pb-2.5"
           )}
         >
