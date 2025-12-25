@@ -8,6 +8,16 @@
     "name": "Amin Haddadi"
   },
   "private": true,
+
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint --fix",
+    "stylelint": "stylelint src/**/*.css --fix",
+    "format": "prettier src/**/*.{ts,tsx} --write",
+    "prepare": "husky"
+  },
   "dependencies": {
     "next": "14.2.21",
     "react": "^18.3.1",
