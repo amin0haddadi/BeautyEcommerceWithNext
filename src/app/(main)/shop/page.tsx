@@ -20,14 +20,18 @@ export const metadata: Metadata = generatePageMetadata({
   ],
 });
 
-export default function ShopPage() {
+interface ShopPageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export default function ShopPage({ searchParams }: ShopPageProps) {
   return (
     <>
       <PageHeader
         title="فروشگاه"
         breadcrumbs={[{ label: "خانه", href: "/" }, { label: "فروشگاه" }]}
       />
-      <ShopContent />
+      <ShopContent searchParams={searchParams} />
     </>
   );
 }

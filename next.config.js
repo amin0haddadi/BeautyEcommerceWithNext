@@ -6,6 +6,16 @@ const nextConfig = {
         protocol: "https",
         hostname: "**",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        pathname: "/storage/**",
+      },
+      {
+        protocol: "https",
+        hostname: "beauty-center.mrhn.ir",
+        pathname: "/storage/**",
+      },
     ],
   },
 };

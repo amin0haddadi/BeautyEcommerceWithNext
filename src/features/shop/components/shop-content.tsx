@@ -1,196 +1,202 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Filter } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useState, useEffect, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ProductGrid } from "@/features/products/components/product-grid";
-import { useProducts } from "@/hooks/use-products";
+import { Pagination } from "@/components/ui/pagination";
+import { Loading } from "@/components/ui/loading";
+import { ErrorMessage } from "@/components/ui/error-message";
+import { ProductFiltersBar, type SortOption } from "@/components/filters";
+import { useProducts } from "@/hooks/queries/products";
 import { categories } from "@/data/categories";
-import { cn } from "@/lib/utils";
 
-type SortOption = "newest" | "price-low" | "price-high" | "name";
+interface ShopContentProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
 
-export function ShopContent() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<SortOption>("newest");
-  const [showFilters, setShowFilters] = useState(false);
-
-  // Fetch products using React Query
-  const { data: allProducts = [], isLoading, error } = useProducts();
-
-  const filteredProducts = useMemo(() => {
-    let filtered = [...allProducts];
-
-    // Filter by category
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter(
-        (product) => product.category === selectedCategory
-      );
-    }
-
-    // Sort products
-    switch (sortBy) {
-      case "price-low":
-        filtered.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-        break;
-      case "price-high":
-        filtered.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-        break;
+export function ShopContent({ searchParams }: ShopContentProps) {
+  const router = useRouter();
+  const searchParamsHook = useSearchParams();
+  
+  // Map API sort param to UI sort option
+  // API uses: name, base_price, created_at, price (with '-' prefix for descending)
+  const getSortFromApiParam = (apiSort?: string): SortOption => {
+    switch (apiSort) {
+      case "price":
+        return "price-low";
+      case "-price":
+        return "price-high";
       case "name":
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-        break;
+      case "-name":
+        return "name";
+      case "created_at":
+      case "-created_at":
       default:
-        // newest - keep original order
-        break;
+        return "newest";
     }
+  };
 
-    return filtered;
-  }, [allProducts, selectedCategory, sortBy]);
+  // Read initial values from URL params
+  const pageFromUrl = searchParams.page 
+    ? parseInt(Array.isArray(searchParams.page) ? searchParams.page[0] : searchParams.page, 10)
+    : 1;
+  const categoryFromUrl = searchParams.category 
+    ? (Array.isArray(searchParams.category) ? searchParams.category[0] : searchParams.category)
+    : "all";
+  const sortParamFromUrl = searchParams.sort 
+    ? (Array.isArray(searchParams.sort) ? searchParams.sort[0] : searchParams.sort)
+    : undefined;
+  const sortFromUrl = getSortFromApiParam(sortParamFromUrl);
+
+  const [selectedCategory, setSelectedCategory] = useState<string>(categoryFromUrl);
+  const [sortBy, setSortBy] = useState<SortOption>(sortFromUrl);
+  const [currentPage, setCurrentPage] = useState(pageFromUrl);
+
+  // Map sort option to API sort parameter
+  // API uses: name, base_price, created_at, price (with '-' prefix for descending)
+  const getSortParam = (sort: SortOption): string | undefined => {
+    switch (sort) {
+      case "price-low":
+        return "price"; // ASC by default (min variant price)
+      case "price-high":
+        return "-price"; // DESC (max variant price)
+      case "name":
+        return "name"; // ASC by default
+      default:
+        return "-created_at"; // newest - sort by created_at DESC
+    }
+  };
+
+  // Sync state with URL params when they change
+  useEffect(() => {
+    const page = pageFromUrl;
+    const category = categoryFromUrl;
+    const sort = sortFromUrl;
+    
+    if (page !== currentPage) setCurrentPage(page);
+    if (category !== selectedCategory) setSelectedCategory(category);
+    if (sort !== sortBy) setSortBy(sort);
+  }, [pageFromUrl, categoryFromUrl, sortFromUrl]);
+
+  // Update URL when params change
+  const updateUrl = (updates: { page?: number; category?: string; sort?: string }) => {
+    const params = new URLSearchParams(searchParamsHook.toString());
+    
+    if (updates.page !== undefined) {
+      if (updates.page === 1) {
+        params.delete("page");
+      } else {
+        params.set("page", updates.page.toString());
+      }
+    }
+    
+    if (updates.category !== undefined) {
+      if (updates.category === "all") {
+        params.delete("category");
+      } else {
+        params.set("category", updates.category);
+      }
+    }
+    
+    if (updates.sort !== undefined) {
+      if (!updates.sort) {
+        params.delete("sort");
+      } else {
+        params.set("sort", updates.sort);
+      }
+    }
+    
+    router.push(`/shop?${params.toString()}`);
+  };
+
+  // Reset page when filters change
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    updateUrl({ category, page: 1 });
+  };
+
+  const handleSortChange = (sort: SortOption) => {
+    setSortBy(sort);
+    const sortParam = getSortParam(sort);
+    updateUrl({ sort: sortParam, page: 1 });
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    updateUrl({ page });
+  };
+
+  // Build API params - memoized to ensure stable reference
+  // API uses filter[category.slug] for category filtering
+  const apiParams = useMemo(
+    () => ({
+      page: currentPage,
+      per_page: 15,
+      ...(selectedCategory !== "all" && { "filter[category.slug]": selectedCategory }),
+      ...(getSortParam(sortBy) && { sort: getSortParam(sortBy) }),
+      include: "category,variants", // Include relations for better data
+    }),
+    [currentPage, selectedCategory, sortBy]
+  );
+
+  // Fetch products using React Query with filters
+  const { data: productsData, isLoading, error } = useProducts(apiParams);
+
+  const products = productsData?.products || [];
+  const pagination = productsData?.pagination;
 
   // Loading state
   if (isLoading) {
     return (
-      <div className="py-8 lg:py-12">
-        <div className="container-custom">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-              <p className="text-muted-foreground">در حال بارگذاری محصولات...</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Loading
+        message="در حال بارگذاری محصولات..."
+        withContainer
+      />
     );
   }
 
   // Error state
   if (error) {
     return (
-      <div className="py-8 lg:py-12">
-        <div className="container-custom">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <p className="text-destructive mb-4">
-                خطا در بارگذاری محصولات. لطفاً دوباره تلاش کنید.
-              </p>
-              <Button onClick={() => window.location.reload()}>
-                تلاش مجدد
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ErrorMessage
+        message="خطا در بارگذاری محصولات. لطفاً دوباره تلاش کنید."
+        onRetry={() => window.location.reload()}
+        withContainer
+      />
     );
   }
+
+  // Transform categories to match CategoryFilter format
+  const filterCategories = categories.map((cat) => ({
+    id: cat.categoryId,
+    name: cat.name,
+  }));
 
   return (
     <div className="py-8 lg:py-12">
       <div className="container-custom">
         {/* Filters Bar */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b mb-8">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              onClick={() => setShowFilters(!showFilters)}
-              className="md:hidden"
-            >
-              <Filter className="h-4 w-4 ml-2" />
-              فیلترها
-            </Button>
-
-            {/* Category Filter - Desktop */}
-            <div className="hidden md:flex items-center gap-2">
-              <button
-                onClick={() => setSelectedCategory("all")}
-                className={cn(
-                  "px-4 py-2 text-sm rounded-full transition-colors",
-                  selectedCategory === "all"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted hover:bg-muted/80"
-                )}
-              >
-                همه
-              </button>
-              {categories.map((category) => (
-                <button
-                  key={category.categoryId}
-                  onClick={() => setSelectedCategory(category.categoryId)}
-                  className={cn(
-                    "px-4 py-2 text-sm rounded-full transition-colors",
-                    selectedCategory === category.categoryId
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted hover:bg-muted/80"
-                  )}
-                >
-                  {category.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">
-              {filteredProducts.length} محصول
-            </span>
-            <Select
-              value={sortBy}
-              onValueChange={(value: SortOption) => setSortBy(value)}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="مرتب‌سازی" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="newest">جدیدترین</SelectItem>
-                <SelectItem value="price-low">قیمت: کم به زیاد</SelectItem>
-                <SelectItem value="price-high">قیمت: زیاد به کم</SelectItem>
-                <SelectItem value="name">نام</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Mobile Filters */}
-        {showFilters && (
-          <div className="md:hidden pb-6 mb-6 border-b">
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setSelectedCategory("all")}
-                className={cn(
-                  "px-4 py-2 text-sm rounded-full transition-colors",
-                  selectedCategory === "all"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted hover:bg-muted/80"
-                )}
-              >
-                همه
-              </button>
-              {categories.map((category) => (
-                <button
-                  key={category.categoryId}
-                  onClick={() => setSelectedCategory(category.categoryId)}
-                  className={cn(
-                    "px-4 py-2 text-sm rounded-full transition-colors",
-                    selectedCategory === category.categoryId
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted hover:bg-muted/80"
-                  )}
-                >
-                  {category.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+        <ProductFiltersBar
+          categories={filterCategories}
+          selectedCategory={selectedCategory}
+          onCategoryChange={handleCategoryChange}
+          sortBy={sortBy}
+          onSortChange={handleSortChange}
+          totalCount={pagination?.total || products.length}
+        />
 
         {/* Products Grid */}
-        <ProductGrid products={filteredProducts} />
+        <ProductGrid products={products} />
+
+        {/* Pagination */}
+        {pagination && (
+          <Pagination
+            currentPage={pagination.current_page}
+            lastPage={pagination.last_page}
+            onPageChange={handlePageChange}
+            className="mt-8"
+          />
+        )}
       </div>
     </div>
   );
