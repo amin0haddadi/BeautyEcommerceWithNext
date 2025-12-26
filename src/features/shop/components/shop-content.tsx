@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ProductGrid } from "@/features/products/components/product-grid";
-import { products as allProducts } from "@/data/products";
+import { useProducts } from "@/hooks/use-products";
 import { categories } from "@/data/categories";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +21,9 @@ export function ShopContent() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [showFilters, setShowFilters] = useState(false);
+
+  // Fetch products using React Query
+  const { data: allProducts = [], isLoading, error } = useProducts();
 
   const filteredProducts = useMemo(() => {
     let filtered = [...allProducts];
@@ -49,7 +52,43 @@ export function ShopContent() {
     }
 
     return filtered;
-  }, [selectedCategory, sortBy]);
+  }, [allProducts, selectedCategory, sortBy]);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="py-8 lg:py-12">
+        <div className="container-custom">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">در حال بارگذاری محصولات...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="py-8 lg:py-12">
+        <div className="container-custom">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <p className="text-destructive mb-4">
+                خطا در بارگذاری محصولات. لطفاً دوباره تلاش کنید.
+              </p>
+              <Button onClick={() => window.location.reload()}>
+                تلاش مجدد
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="py-8 lg:py-12">
