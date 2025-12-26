@@ -1,7 +1,8 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { handleQueryError } from "@/lib/error-handler";
 
 let ReactQueryDevtools: any = null;
 if (process.env.NODE_ENV === "development") {
@@ -29,6 +30,48 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
         },
       })
   );
+
+  // Set up global error handlers using cache subscriptions (React Query v5)
+  useEffect(() => {
+    const handledErrors = new WeakSet();
+
+    // Subscribe to query cache updates - check for errors in updated queries
+    const unsubscribeQueries = queryClient.getQueryCache().subscribe((event) => {
+      if (event?.type === "updated") {
+        const query = event.query;
+        // Only handle error if query is in error state and hasn't been handled yet
+        if (
+          query.state.status === "error" &&
+          query.state.error &&
+          !handledErrors.has(query.state.error)
+        ) {
+          handledErrors.add(query.state.error);
+          handleQueryError(query.state.error, query);
+        }
+      }
+    });
+
+    // Subscribe to mutation cache updates - check for errors in updated mutations
+    const unsubscribeMutations = queryClient.getMutationCache().subscribe((event) => {
+      if (event?.type === "updated") {
+        const mutation = event.mutation;
+        // Only handle error if mutation is in error state and hasn't been handled yet
+        if (
+          mutation.state.status === "error" &&
+          mutation.state.error &&
+          !handledErrors.has(mutation.state.error)
+        ) {
+          handledErrors.add(mutation.state.error);
+          handleQueryError(mutation.state.error);
+        }
+      }
+    });
+
+    return () => {
+      unsubscribeQueries();
+      unsubscribeMutations();
+    };
+  }, [queryClient]);
 
   return (
     <QueryClientProvider client={queryClient}>
