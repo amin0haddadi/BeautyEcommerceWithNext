@@ -1,5 +1,6 @@
 import { rootMetadata } from "@/config/metadata";
 import { QueryProvider } from "@/lib/providers/query-provider";
+import { Toaster } from "@/components/ui/toaster";
 import { nastaliq } from "@/lib/fonts";
 import "./globals.css";
 
@@ -13,7 +14,10 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl" className={nastaliq.variable} style={nastaliq.style}>
       <body className={`${nastaliq.className} min-h-screen flex flex-col`}>
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          {children}
+          <Toaster />
+        </QueryProvider>
       </body>
     </html>
   );
