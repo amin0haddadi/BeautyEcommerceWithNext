@@ -1,9 +1,9 @@
 /**
  * Base API client for making HTTP requests
- * Replace the base URL with your actual API endpoint
+ * API base URL is configured via NEXT_PUBLIC_API_URL environment variable
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://beauty-center.mrhn.ir/api";
 
 export interface ApiError {
   message: string;
