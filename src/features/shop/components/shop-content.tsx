@@ -8,7 +8,7 @@ import { Loading } from "@/components/ui/loading";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { ProductFiltersBar, type SortOption } from "@/components/filters";
 import { useProducts } from "@/hooks/queries/products";
-import { categories } from "@/data/categories";
+import { useCategories } from "@/hooks/queries/categories";
 
 interface ShopContentProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -40,7 +40,12 @@ export function ShopContent({ searchParams }: ShopContentProps) {
   const pageFromUrl = searchParams.page 
     ? parseInt(Array.isArray(searchParams.page) ? searchParams.page[0] : searchParams.page, 10)
     : 1;
-  const categoryFromUrl = searchParams.category 
+  // Support both old format (category) and new format (filter[category.slug])
+  const categoryFromUrl = searchParams["filter[category.slug]"]
+    ? (Array.isArray(searchParams["filter[category.slug]"]) 
+        ? searchParams["filter[category.slug]"][0] 
+        : searchParams["filter[category.slug]"])
+    : searchParams.category
     ? (Array.isArray(searchParams.category) ? searchParams.category[0] : searchParams.category)
     : "all";
   const sortParamFromUrl = searchParams.sort 
@@ -91,10 +96,12 @@ export function ShopContent({ searchParams }: ShopContentProps) {
     }
     
     if (updates.category !== undefined) {
+      // Remove old format if exists
+      params.delete("category");
       if (updates.category === "all") {
-        params.delete("category");
+        params.delete("filter[category.slug]");
       } else {
-        params.set("category", updates.category);
+        params.set("filter[category.slug]", updates.category);
       }
     }
     
@@ -141,9 +148,20 @@ export function ShopContent({ searchParams }: ShopContentProps) {
 
   // Fetch products using React Query with filters
   const { data: productsData, isLoading, error } = useProducts(apiParams);
+  
+  // Fetch categories for filter - MUST be called before any early returns
+  const { data: categoriesData } = useCategories();
 
   const products = productsData?.products || [];
   const pagination = productsData?.pagination;
+  
+  // Transform categories to match CategoryFilter format
+  const filterCategories = categoriesData
+    ? categoriesData.map((cat) => ({
+        id: cat.categoryId,
+        name: cat.name,
+      }))
+    : [];
 
   // Loading state
   if (isLoading) {
@@ -165,12 +183,6 @@ export function ShopContent({ searchParams }: ShopContentProps) {
       />
     );
   }
-
-  // Transform categories to match CategoryFilter format
-  const filterCategories = categories.map((cat) => ({
-    id: cat.categoryId,
-    name: cat.name,
-  }));
 
   return (
     <div className="py-8 lg:py-12">
