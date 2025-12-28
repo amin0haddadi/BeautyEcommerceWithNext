@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useLogout } from "@/hooks/mutations/auth";
 
 const orders = [
   {
@@ -41,6 +42,7 @@ const statusLabels = {
 };
 
 export function ProfileContent() {
+  const { logout } = useLogout();
   const [profile, setProfile] = useState({
     firstName: "سارا",
     lastName: "محمدی",
@@ -101,7 +103,10 @@ export function ProfileContent() {
                   <Settings className="h-4 w-4" />
                   تنظیمات
                 </Link>
-                <button className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors w-full">
+                <button
+                  onClick={logout}
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors w-full"
+                >
                   <LogOut className="h-4 w-4" />
                   خروج
                 </button>
