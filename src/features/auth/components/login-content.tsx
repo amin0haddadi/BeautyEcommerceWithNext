@@ -2,23 +2,35 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useLogin } from "@/hooks/mutations/auth";
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
 export function LoginContent() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+  const { mutate: login, isPending } = useLogin();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Demo login - just redirect
-    router.push("/");
+  const onSubmit = (data: LoginFormData) => {
+    login(data);
   };
 
   return (
@@ -28,23 +40,34 @@ export function LoginContent() {
         <p className="text-muted-foreground">وارد حساب کاربری خود شوید</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium mb-2">ایمیل</label>
+          <Label htmlFor="email" className="block mb-3">
+            ایمیل
+          </Label>
           <Input
+            id="email"
             type="email"
             placeholder="you@example.com"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            required
+            {...register("email", {
+              required: "ایمیل الزامی است",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "ایمیل معتبر نیست",
+              },
+            })}
+            className={errors.email ? "border-destructive" : ""}
           />
+          {errors.email && (
+            <p className="text-sm text-destructive mt-2">
+              {errors.email.message}
+            </p>
+          )}
         </div>
 
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="block text-sm font-medium">رمز عبور</label>
+          <div className="flex items-center justify-between mb-3">
+            <Label htmlFor="password">رمز عبور</Label>
             <Link
               href="/forgot-password"
               className="text-sm text-primary hover:underline"
@@ -54,18 +77,33 @@ export function LoginContent() {
           </div>
           <div className="relative">
             <Input
+              id="password"
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              required
+              {...register("password", {
+                required: "رمز عبور الزامی است",
+                minLength: {
+                  value: 8,
+                  message: "رمز عبور باید حداقل 8 کاراکتر باشد",
+                },
+                validate: {
+                  hasUppercase: (value) =>
+                    /[A-Z]/.test(value) ||
+                    "رمز عبور باید حداقل یک حرف بزرگ داشته باشد",
+                  hasSpecialChar: (value) =>
+                    /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value) ||
+                    "رمز عبور باید حداقل یک کاراکتر خاص داشته باشد",
+                  hasNumber: (value) =>
+                    /[0-9]/.test(value) ||
+                    "رمز عبور باید حداقل یک عدد داشته باشد",
+                },
+              })}
+              className={errors.password ? "border-destructive" : ""}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             >
               {showPassword ? (
                 <EyeOff className="h-4 w-4" />
@@ -74,14 +112,19 @@ export function LoginContent() {
               )}
             </button>
           </div>
+          {errors.password && (
+            <p className="text-sm text-destructive mt-2">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
-        <Button type="submit" className="w-full" size="lg">
-          ورود
+        <Button type="submit" className="w-full" size="lg" disabled={isPending}>
+          {isPending ? "در حال ورود..." : "ورود"}
         </Button>
       </form>
 
-      <div className="relative my-8">
+      {/* <div className="relative my-8">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t" />
         </div>
@@ -120,9 +163,9 @@ export function LoginContent() {
           </svg>
           فیسبوک
         </Button>
-      </div>
+      </div> */}
 
-      <p className="text-center text-sm text-muted-foreground mt-8">
+      <p className="text-center text-sm text-muted-foreground mt-2">
         حساب کاربری ندارید؟{" "}
         <Link href="/register" className="text-primary hover:underline">
           ثبت نام

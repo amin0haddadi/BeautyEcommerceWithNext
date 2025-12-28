@@ -4,8 +4,18 @@
  */
 
 import { logger } from "@/lib/logger";
+import { useAuthStore } from "@/stores/auth-store";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://beauty-center.mrhn.ir/api";
+
+/**
+ * Get auth token from store
+ * This function can be called on the client side to get the current token
+ */
+function getAuthToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return useAuthStore.getState().token;
+}
 
 export interface ApiError {
   message: string;
@@ -25,9 +35,13 @@ export async function apiClient<T>(
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
   
+  // Get auth token if available
+  const token = getAuthToken();
+  
   const config: RequestInit = {
     headers: {
       "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
       ...options?.headers,
     },
     ...options,
