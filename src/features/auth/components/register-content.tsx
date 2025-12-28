@@ -2,25 +2,51 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useRegister } from "@/hooks/mutations/auth";
+
+interface RegisterFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+}
 
 export function RegisterContent() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+  const { mutate: register, isPending } = useRegister();
+
+  const {
+    register: registerField,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+    },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Demo registration - just redirect
-    router.push("/");
+  const password = watch("password");
+
+  const onSubmit = (data: RegisterFormData) => {
+    // Combine firstName and lastName into name
+    register({
+      name: `${data.firstName} ${data.lastName}`.trim(),
+      email: data.email,
+      password: data.password,
+      password_confirmation: data.password_confirmation,
+    });
   };
 
   return (
@@ -32,61 +58,111 @@ export function RegisterContent() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">نام</label>
+            <Label htmlFor="firstName" className="block mb-3">
+              نام
+            </Label>
             <Input
+              id="firstName"
               placeholder="نام خود را وارد کنید"
-              value={formData.firstName}
-              onChange={(e) =>
-                setFormData({ ...formData, firstName: e.target.value })
-              }
-              required
+              {...registerField("firstName", {
+                required: "نام الزامی است",
+                minLength: {
+                  value: 2,
+                  message: "نام باید حداقل ۲ کاراکتر باشد",
+                },
+              })}
+              className={errors.firstName ? "border-destructive" : ""}
             />
+            {errors.firstName && (
+              <p className="text-sm text-destructive mt-2">
+                {errors.firstName.message}
+              </p>
+            )}
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">نام خانوادگی</label>
+            <Label htmlFor="lastName" className="block mb-3">
+              نام خانوادگی
+            </Label>
             <Input
+              id="lastName"
               placeholder="نام خانوادگی خود را وارد کنید"
-              value={formData.lastName}
-              onChange={(e) =>
-                setFormData({ ...formData, lastName: e.target.value })
-              }
-              required
+              {...registerField("lastName", {
+                required: "نام خانوادگی الزامی است",
+                minLength: {
+                  value: 2,
+                  message: "نام خانوادگی باید حداقل ۲ کاراکتر باشد",
+                },
+              })}
+              className={errors.lastName ? "border-destructive" : ""}
             />
+            {errors.lastName && (
+              <p className="text-sm text-destructive mt-2">
+                {errors.lastName.message}
+              </p>
+            )}
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">ایمیل</label>
+          <Label htmlFor="email" className="block mb-3">
+            ایمیل
+          </Label>
           <Input
+            id="email"
             type="email"
             placeholder="you@example.com"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            required
+            {...registerField("email", {
+              required: "ایمیل الزامی است",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "ایمیل معتبر نیست",
+              },
+            })}
+            className={errors.email ? "border-destructive" : ""}
           />
+          {errors.email && (
+            <p className="text-sm text-destructive mt-2">
+              {errors.email.message}
+            </p>
+          )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">رمز عبور</label>
+          <Label htmlFor="password" className="block mb-3">
+            رمز عبور
+          </Label>
           <div className="relative">
             <Input
+              id="password"
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              required
+              {...registerField("password", {
+                required: "رمز عبور الزامی است",
+                minLength: {
+                  value: 8,
+                  message: "رمز عبور باید حداقل 8 کاراکتر باشد",
+                },
+                validate: {
+                  hasUppercase: (value) =>
+                    /[A-Z]/.test(value) ||
+                    "رمز عبور باید حداقل یک حرف بزرگ داشته باشد",
+                  hasSpecialChar: (value) =>
+                    /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value) ||
+                    "رمز عبور باید حداقل یک کاراکتر خاص داشته باشد",
+                  hasNumber: (value) =>
+                    /[0-9]/.test(value) ||
+                    "رمز عبور باید حداقل یک عدد داشته باشد",
+                },
+              })}
+              className={errors.password ? "border-destructive" : ""}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             >
               {showPassword ? (
                 <EyeOff className="h-4 w-4" />
@@ -95,13 +171,50 @@ export function RegisterContent() {
               )}
             </button>
           </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            باید حداقل ۸ کاراکتر باشد
-          </p>
+          {errors.password && (
+            <p className="text-sm text-destructive mt-2">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
-        <Button type="submit" className="w-full" size="lg">
-          ایجاد حساب کاربری
+        <div>
+          <Label htmlFor="password_confirmation" className="block mb-3">
+            تکرار رمز عبور
+          </Label>
+          <div className="relative">
+            <Input
+              id="password_confirmation"
+              type={showPasswordConfirmation ? "text" : "password"}
+              placeholder="••••••••"
+              {...registerField("password_confirmation", {
+                required: "تکرار رمز عبور الزامی است",
+                validate: (value) =>
+                  value === password || "رمز عبور و تکرار آن باید یکسان باشند",
+              })}
+              className={errors.password_confirmation ? "border-destructive" : ""}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPasswordConfirmation(!showPasswordConfirmation)}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              {showPasswordConfirmation ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          </div>
+          {errors.password_confirmation && (
+            <p className="text-sm text-destructive mt-2">
+              {errors.password_confirmation.message}
+            </p>
+          )}
+        </div>
+
+        <Button type="submit" className="w-full" size="lg" disabled={isPending}>
+          {isPending ? "در حال ثبت نام..." : "ایجاد حساب کاربری"}
         </Button>
       </form>
 
