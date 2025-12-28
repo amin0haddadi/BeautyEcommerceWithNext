@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRegister } from "@/hooks/mutations/auth";
+import { useToast } from "@/hooks/use-toast";
 
 interface RegisterFormData {
   firstName: string;
@@ -18,9 +21,11 @@ interface RegisterFormData {
 }
 
 export function RegisterContent() {
+  const router = useRouter();
+  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
-  const { mutate: register, isPending } = useRegister();
+  const { mutateAsync: register, isPending } = useRegister();
 
   const {
     register: registerField,
@@ -39,14 +44,51 @@ export function RegisterContent() {
 
   const password = watch("password");
 
-  const onSubmit = (data: RegisterFormData) => {
-    // Combine firstName and lastName into name
-    register({
-      name: `${data.firstName} ${data.lastName}`.trim(),
-      email: data.email,
-      password: data.password,
-      password_confirmation: data.password_confirmation,
-    });
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      // Register the user
+      const response = await register({
+        name: `${data.firstName} ${data.lastName}`.trim(),
+        email: data.email,
+        password: data.password,
+        password_confirmation: data.password_confirmation,
+      });
+
+      // After successful registration, automatically sign in with NextAuth
+      if (response?.user && response?.token) {
+        const signInResult = await signIn("credentials", {
+          email: data.email,
+          password: data.password,
+          redirect: false,
+        });
+
+        if (signInResult?.error) {
+          toast({
+            title: "ثبت نام موفق",
+            description: "حساب کاربری شما ایجاد شد. لطفاً وارد شوید.",
+          });
+          router.push("/login");
+        } else if (signInResult?.ok) {
+          toast({
+            title: "ثبت نام موفق",
+            description: `خوش آمدید ${response.user.name}`,
+          });
+          router.push("/");
+          router.refresh();
+        }
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error?.data?.message ||
+        error?.message ||
+        "خطا در ثبت نام. لطفاً اطلاعات خود را بررسی کنید.";
+
+      toast({
+        title: "خطا در ثبت نام",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    }
   };
 
   return (

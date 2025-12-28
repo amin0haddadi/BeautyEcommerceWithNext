@@ -24,17 +24,17 @@ export interface RegisterRequest {
   email: string;
   password: string;
   password_confirmation: string;
+  guest_token?: string;
 }
 
 export interface RegisterResponse {
-  data: {
-    user: {
-      id: string;
-      name: string;
-      email: string;
-    };
-    token: string;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+    created_at: string;
+    updated_at: string;
   };
-  message?: string;
+  token: string;
 }
 
