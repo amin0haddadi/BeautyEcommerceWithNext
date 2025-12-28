@@ -54,8 +54,18 @@ export function RegisterContent() {
         password_confirmation: data.password_confirmation,
       });
 
-      // After successful registration, automatically sign in with NextAuth
-      if (response?.user && response?.token) {
+      // Log response for debugging
+      console.log("Register response:", response);
+      console.log("Response type:", typeof response);
+      console.log("Response keys:", response ? Object.keys(response) : "null");
+
+      // Response structure: { user: {...}, token: "..." }
+      // No data wrapper - access user and token directly
+      // Check if response has user and token properties directly
+      const user = response?.user;
+      const token = response?.token;
+
+      if (user && token) {
         const signInResult = await signIn("credentials", {
           email: data.email,
           password: data.password,
@@ -71,17 +81,51 @@ export function RegisterContent() {
         } else if (signInResult?.ok) {
           toast({
             title: "ثبت نام موفق",
-            description: `خوش آمدید ${response.user.name}`,
+            description: `خوش آمدید ${user.name}`,
           });
           router.push("/");
           router.refresh();
         }
+      } else {
+        // Log what we actually got
+        console.error("Unexpected response structure:", response);
+        // Fallback if response structure is unexpected
+        toast({
+          title: "ثبت نام موفق",
+          description: "حساب کاربری شما ایجاد شد. لطفاً وارد شوید.",
+        });
+        router.push("/login");
       }
     } catch (error: any) {
-      const errorMessage =
-        error?.data?.message ||
-        error?.message ||
-        "خطا در ثبت نام. لطفاً اطلاعات خود را بررسی کنید.";
+      // Log error for debugging
+      console.error("Register error:", error);
+      
+      // Handle different error structures
+      let errorMessage = "خطا در ثبت نام. لطفاً اطلاعات خود را بررسی کنید.";
+      
+      if (error) {
+        // Check for validation errors (422 status) - Laravel format
+        if (error.data?.errors) {
+          const errors = error.data.errors;
+          // Get first error from first field
+          const firstField = Object.keys(errors)[0];
+          if (firstField && Array.isArray(errors[firstField]) && errors[firstField].length > 0) {
+            errorMessage = errors[firstField][0];
+          }
+        }
+        // Check for error message in data
+        else if (error.data?.message) {
+          errorMessage = error.data.message;
+        }
+        // Check for error field
+        else if (error.data?.error) {
+          errorMessage = error.data.error;
+        }
+        // Check for direct message (from ApiError)
+        else if (error.message) {
+          errorMessage = error.message;
+        }
+      }
 
       toast({
         title: "خطا در ثبت نام",
