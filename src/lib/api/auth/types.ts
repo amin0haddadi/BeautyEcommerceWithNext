@@ -8,15 +8,15 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  data: {
-    user: {
-      id: string;
-      name: string;
-      email: string;
-    };
-    token: string;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+    email_verified_at: string | null;
+    created_at: string;
+    updated_at: string;
   };
-  message?: string;
+  token: string;
 }
 
 export interface RegisterRequest {

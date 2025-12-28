@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useLogin } from "@/hooks/mutations/auth";
+import { useToast } from "@/hooks/use-toast";
 
 interface LoginFormData {
   email: string;
@@ -15,8 +17,10 @@ interface LoginFormData {
 }
 
 export function LoginContent() {
+  const router = useRouter();
+  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
-  const { mutate: login, isPending } = useLogin();
+  const [isPending, setIsPending] = useState(false);
 
   const {
     register,
@@ -29,8 +33,39 @@ export function LoginContent() {
     },
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    login(data);
+  const onSubmit = async (data: LoginFormData) => {
+    setIsPending(true);
+    
+    try {
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        toast({
+          title: "خطا در ورود",
+          description: result.error,
+          variant: "destructive",
+        });
+      } else if (result?.ok) {
+        toast({
+          title: "ورود موفق",
+          description: "خوش آمدید",
+        });
+        router.push("/");
+        router.refresh();
+      }
+    } catch (error) {
+      toast({
+        title: "خطا در ورود",
+        description: "خطای نامشخص. لطفاً دوباره تلاش کنید.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (

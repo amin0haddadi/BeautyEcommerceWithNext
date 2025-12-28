@@ -4,17 +4,28 @@
  */
 
 import { logger } from "@/lib/logger";
-import { useAuthStore } from "@/stores/auth-store";
+import { getServerToken } from "./get-token";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://beauty-center.mrhn.ir/api";
 
 /**
- * Get auth token from store
- * This function can be called on the client side to get the current token
+ * Get auth token
+ * For server-side: uses NextAuth session
+ * For client-side: token should be passed via options
  */
-function getAuthToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return useAuthStore.getState().token;
+async function getAuthToken(options?: { token?: string }): Promise<string | null> {
+  // If token is explicitly provided, use it
+  if (options?.token) {
+    return options.token;
+  }
+  
+  // Server-side: get from NextAuth session
+  if (typeof window === "undefined") {
+    return await getServerToken();
+  }
+  
+  // Client-side: return null (token should be passed via options)
+  return null;
 }
 
 export interface ApiError {
@@ -31,12 +42,12 @@ export interface ApiErrorResponse {
 
 export async function apiClient<T>(
   endpoint: string,
-  options?: RequestInit
+  options?: RequestInit & { token?: string }
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
   
   // Get auth token if available
-  const token = getAuthToken();
+  const token = await getAuthToken({ token: options?.token });
   
   const config: RequestInit = {
     headers: {
@@ -46,6 +57,9 @@ export async function apiClient<T>(
     },
     ...options,
   };
+  
+  // Remove token from options to avoid passing it in fetch
+  delete (config as any).token;
 
   try {
     logger.debug(`API Request: ${options?.method || "GET"} ${endpoint}`);
@@ -106,24 +120,24 @@ export async function apiClient<T>(
 
 // Helper methods for different HTTP verbs
 export const api = {
-  get: <T>(endpoint: string, options?: RequestInit) =>
+  get: <T>(endpoint: string, options?: RequestInit & { token?: string }) =>
     apiClient<T>(endpoint, { ...options, method: "GET" }),
   
-  post: <T>(endpoint: string, data?: unknown, options?: RequestInit) =>
+  post: <T>(endpoint: string, data?: unknown, options?: RequestInit & { token?: string }) =>
     apiClient<T>(endpoint, {
       ...options,
       method: "POST",
       body: JSON.stringify(data),
     }),
   
-  put: <T>(endpoint: string, data?: unknown, options?: RequestInit) =>
+  put: <T>(endpoint: string, data?: unknown, options?: RequestInit & { token?: string }) =>
     apiClient<T>(endpoint, {
       ...options,
       method: "PUT",
       body: JSON.stringify(data),
     }),
   
-  delete: <T>(endpoint: string, options?: RequestInit) =>
+  delete: <T>(endpoint: string, options?: RequestInit & { token?: string }) =>
     apiClient<T>(endpoint, { ...options, method: "DELETE" }),
 };
 
