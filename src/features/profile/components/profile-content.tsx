@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { User, Package, Heart, LogOut, Settings, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLogout } from "@/hooks/mutations/auth";
+import { Loading } from "@/components/ui/loading";
 
 const orders = [
   {
@@ -43,12 +45,61 @@ const statusLabels = {
 
 export function ProfileContent() {
   const { logout } = useLogout();
+  const { data: session, status } = useSession();
+
+  // Get user from session
+  const user = session?.user;
+
+  // Split full name into first and last name
+  const nameParts = useMemo(() => {
+    if (!user?.name) return { firstName: "", lastName: "" };
+    const parts = user.name.trim().split(/\s+/);
+    if (parts.length === 1) {
+      return { firstName: parts[0], lastName: "" };
+    }
+    const lastName = parts.pop() || "";
+    const firstName = parts.join(" ");
+    return { firstName, lastName };
+  }, [user?.name]);
+
   const [profile, setProfile] = useState({
-    firstName: "سارا",
-    lastName: "محمدی",
-    email: "sara@example.com",
-    phone: "۰۹۱۲۱۲۳۴۵۶۷",
+    firstName: nameParts.firstName,
+    lastName: nameParts.lastName,
+    email: user?.email || "",
+    phone: "۰۹۱۲۱۲۳۴۵۶۷", // Phone not in API response yet
   });
+
+  // Update profile when user data loads
+  useEffect(() => {
+    if (user) {
+      setProfile({
+        firstName: nameParts.firstName,
+        lastName: nameParts.lastName,
+        email: user.email,
+        phone: "۰۹۱۲۱۲۳۴۵۶۷", // Phone not in API response yet
+      });
+    }
+  }, [user, nameParts]);
+
+  if (status === "loading") {
+    return <Loading message="در حال بارگذاری پروفایل..." withContainer />;
+  }
+
+  if (status === "unauthenticated" || !user) {
+    return (
+      <div className="py-8 lg:py-12">
+        <div className="container-custom">
+          <p className="text-center text-muted-foreground">
+            لطفاً ابتدا{" "}
+            <Link href="/login" className="text-primary hover:underline">
+              وارد حساب کاربری خود
+            </Link>{" "}
+            شوید.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const statusColors = {
     delivered: "bg-green-100 text-green-700",
@@ -69,9 +120,9 @@ export function ProfileContent() {
                   <User className="h-10 w-10 text-muted-foreground" />
                 </div>
                 <h2 className="font-semibold">
-                  {profile.firstName} {profile.lastName}
+                  {user.name}
                 </h2>
-                <p className="text-sm text-muted-foreground">{profile.email}</p>
+                <p className="text-sm text-muted-foreground">{user.email}</p>
               </div>
 
               <nav className="space-y-1">
