@@ -10,6 +10,8 @@ export function transformApiCategory(apiCategory: ApiCategory): Category {
     categoryId: apiCategory.slug, // Use slug as categoryId for URL routing
     name: apiCategory.name,
     image: apiCategory.image || "", // Use category image if available, fallback to empty
+    description: apiCategory.description || undefined,
+    productsCount: apiCategory.products_count,
   };
 }
 

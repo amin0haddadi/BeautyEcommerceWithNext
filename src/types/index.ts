@@ -33,6 +33,8 @@ export interface Category {
   categoryId: string;
   name: string;
   image: string;
+  description?: string;
+  productsCount?: number;
 }
 
 // Cart types
