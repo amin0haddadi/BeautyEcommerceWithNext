@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { generatePageMetadata } from "@/lib/metadata-helpers";
-import { getProductById } from "@/data/products";
+import { getProductById } from "@/lib/api/products";
 import { ProductDetails } from "@/features/products/components/product-details";
 
 interface ProductPageProps {
@@ -11,7 +11,7 @@ interface ProductPageProps {
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
-  const product = getProductById(params.id);
+  const product = await getProductById(params.id);
 
   if (!product) {
     return generatePageMetadata({
@@ -43,8 +43,8 @@ export async function generateMetadata({
   });
 }
 
-export default function ProductPage({ params }: ProductPageProps) {
-  const product = getProductById(params.id);
+export default async function ProductPage({ params }: ProductPageProps) {
+  const product = await getProductById(params.id);
 
   if (!product) {
     notFound();

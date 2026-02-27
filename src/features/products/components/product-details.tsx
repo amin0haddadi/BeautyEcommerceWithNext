@@ -18,7 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCartStore } from "@/stores/cart-store";
 import { useWishlistStore } from "@/stores/wishlist-store";
-import { products } from "@/data/products";
+import { useProducts } from "@/hooks/queries/products";
 import { ProductCard } from "@/features/products/components/product-card";
 import type { Product } from "@/types";
 
@@ -36,11 +36,19 @@ export function ProductDetails({ product }: ProductDetailsProps) {
   const { addItem } = useCartStore();
   const { toggleItem, isInWishlist } = useWishlistStore();
 
+  // Fetch related products from the same category
+  const { data: relatedProductsData } = useProducts({
+    "filter[category.slug]": product.category,
+    per_page: 5, // Get 5 to filter out current product
+  });
+
   const isWishlisted = isInWishlist(product.id);
   const images = product.imageGallery || [product.image];
-  const relatedProducts = products
-    .filter((p) => p.category === product.category && p.id !== product.id)
-    .slice(0, 4);
+  const relatedProducts = relatedProductsData?.products
+    ? relatedProductsData.products
+        .filter((p) => p.id !== product.id)
+        .slice(0, 4)
+    : [];
 
   const handleAddToCart = () => {
     addItem(product, quantity, selectedColor);

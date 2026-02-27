@@ -1,11 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { getTrendingProducts } from "@/data/products";
+import { useProducts } from "@/hooks/queries/products";
 import { ProductCard } from "@/features/products/components/product-card";
+import { Loading } from "@/components/ui/loading";
 
 export function TrendingProducts() {
-  const products = getTrendingProducts();
+  // Fetch first 4 products (can be sorted by popularity if API supports it)
+  const { data: productsData, isLoading } = useProducts({
+    per_page: 4,
+    page: 1,
+  });
+
+  const products = productsData?.products || [];
+
+  if (isLoading) {
+    return (
+      <section className="py-16 lg:py-24 bg-muted/30">
+        <div className="container-custom">
+          <Loading message="در حال بارگذاری..." />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-16 lg:py-24 bg-muted/30">
@@ -27,11 +44,17 @@ export function TrendingProducts() {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {products.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-muted-foreground">
+            محصولی یافت نشد.
+          </p>
+        )}
       </div>
     </section>
   );
