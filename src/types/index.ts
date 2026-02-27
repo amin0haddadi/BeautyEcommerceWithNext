@@ -12,6 +12,7 @@ export interface Product {
   isNew?: boolean;
   isStocked?: boolean;
   productNumber?: string;
+  variantId?: number; // Variant ID for cart operations
   colors?: string[];
   content?: string;
   description?: string;

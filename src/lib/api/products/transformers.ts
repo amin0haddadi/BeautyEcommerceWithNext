@@ -31,6 +31,7 @@ export function transformApiProduct(apiProduct: ApiProduct): Product {
     isNew: false, // Can be calculated based on created_at if needed
     isStocked: apiProduct.variant.stock > 0,
     productNumber: apiProduct.variant.sku,
+    variantId: apiProduct.variant.id, // Store variant ID for cart operations
     description: apiProduct.description,
     // Additional fields from variant can be stored if needed
   };

@@ -47,7 +47,8 @@ export function generatePageMetadata({
         },
       ],
       locale: "fa_IR",
-      type: type as "website" | "article",
+      // OpenGraph only supports "website" or "article", so convert "product" to "website"
+      type: (type === "product" ? "website" : type) as "website" | "article",
     },
     twitter: {
       card: "summary_large_image" as const,

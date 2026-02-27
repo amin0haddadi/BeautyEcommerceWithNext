@@ -2,14 +2,51 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cart-store";
+import { useCart } from "@/hooks/queries/cart";
+import { Loading } from "@/components/ui/loading";
+import { ErrorMessage } from "@/components/ui/error-message";
 
 export function CartContent() {
-  const { items, removeItem, updateQuantity, getTotal, clearCart } =
+  const { data: session } = useSession();
+  const { data: apiCartItems, isLoading, error } = useCart();
+  const { items: localItems, removeItem, updateQuantity, getTotal, clearCart } =
     useCartStore();
+
+  // Use API cart for authenticated users, local store for guests
+  const items = session?.user ? (apiCartItems || []) : localItems;
+
+  // Show loading state for authenticated users
+  if (session?.user && isLoading) {
+    return <Loading message="در حال بارگذاری سبد خرید..." withContainer />;
+  }
+
+  // Show error state for authenticated users
+  if (session?.user && error) {
+    return (
+      <ErrorMessage
+        message="خطا در بارگذاری سبد خرید. لطفاً دوباره تلاش کنید."
+        onRetry={() => window.location.reload()}
+        withContainer
+      />
+    );
+  }
+
+  // Calculate totals
+  const calculateTotal = () => {
+    return items.reduce((total, item) => {
+      const price = parseFloat(item.price);
+      return total + price * item.quantity;
+    }, 0);
+  };
+
+  const subtotal = session?.user ? calculateTotal() : getTotal();
+  const shipping = subtotal > 99 ? 0 : 10;
+  const total = subtotal + shipping;
 
   if (items.length === 0) {
     return (
@@ -31,10 +68,6 @@ export function CartContent() {
       </div>
     );
   }
-
-  const subtotal = getTotal();
-  const shipping = subtotal > 99 ? 0 : 10;
-  const total = subtotal + shipping;
 
   return (
     <div className="py-8 lg:py-12">

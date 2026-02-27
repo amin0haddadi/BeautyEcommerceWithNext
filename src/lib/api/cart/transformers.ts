@@ -1,5 +1,5 @@
 import type { CartItem } from "@/types";
-import type { ApiCartItem } from "./types";
+import type { ApiCartItem, ApiCartResponse } from "./types";
 import { transformApiProduct } from "../products/transformers";
 
 /**

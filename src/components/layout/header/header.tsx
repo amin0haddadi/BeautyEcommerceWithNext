@@ -3,9 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { X, Search, User, Heart, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCartStore } from "@/stores/cart-store";
+import { useCart } from "@/hooks/queries/cart";
 import { useUIStore } from "@/stores/ui-store";
 import { mainNavItems } from "@/data/navigation";
 import { Nav } from "./nav";
@@ -13,7 +15,12 @@ import { MobileMenu } from "./mobile-menu";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const { items: cartItems } = useCartStore();
+  const { data: session } = useSession();
+  const { data: apiCartItems } = useCart();
+  const { items: localCartItems } = useCartStore();
+  
+  // Use API cart for authenticated users, local store for guests
+  const cartItems = session?.user ? (apiCartItems || []) : localCartItems;
   const { isPromoVisible, hidePromo, isMobileMenuOpen, toggleMobileMenu } =
     useUIStore();
 
